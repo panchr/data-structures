@@ -58,6 +58,7 @@ int stack_pop(Stack *s) {
 	// Pop an item from the stack
 	if (stack_empty(s)) return STACK_NULL;
 	int retval = (s->current->data);
+	free(s->current); // prevent memory leaks
 	s->current = s->current->next;
 	s->size--;
 	return retval;
