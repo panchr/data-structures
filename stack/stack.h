@@ -41,7 +41,7 @@ void stack_destroy(Stack *s) {
 void stack_push(Stack *s, int datum) {
 	// Push an item onto the stack
 	s->data[s->current++] = datum;
-	if ((double) s->size / s->current < 2) {
+	if ((s->size / s->current) <= 2) {
 		stack_resize(s, s->size * 2);
 		}
 	}
@@ -51,8 +51,8 @@ int stack_pop(Stack *s) {
 	if (stack_empty(s)) return STACK_NULL;
 	s->current--;
 	int retval = (s->data[s->current]);
-	if ((double) s->size / s->current > 4) {
-		stack_resize(s, s->size * 0.5);
+	if ((s->size / s->current) >= 4) {
+		stack_resize(s, s->size / 2);
 		}
 	return retval;
 	}
