@@ -28,8 +28,9 @@ public class Stack<Item> implements Iterable<Item> {
 	public Item pop() {
 		// Pop an item from the stack
 		if (isEmpty()) throw new NoSuchElementException("No more elements exist");
-		Item retval = this.data[this.current--];
-		this.data[this.current + 1] = null;
+		Item retval = this.data[this.current];
+		this.data[this.current] = null;
+		this.current--;
 		if (((double) this.current) / this.size <= 0.25) this.resize(this.size / 2);
 		return retval;
 		}
