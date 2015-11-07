@@ -46,7 +46,7 @@ public class Stack<Item> implements Iterable<Item> {
 
 	public Iterator<Item> iterator() {
 		// Get an iterator for the stack
-		return new StackIterator<Item>(this.data, this.current);
+		return new StackIterator(this.data, this.current);
 		}
 
 	private void resize(int newSize) {
@@ -59,7 +59,7 @@ public class Stack<Item> implements Iterable<Item> {
 		this.size = newSize;
 		}
 
-	private class StackIterator<Item> implements Iterator<Item> {
+	private class StackIterator implements Iterator<Item> {
 		// iterate through the stack
 		int index;
 		Item[] stackData;
@@ -81,26 +81,4 @@ public class Stack<Item> implements Iterable<Item> {
 			return this.index >= 0;
 			}
 		}
-
-	public static void main(String[] args) {
-		// Test the Stack implementation
-		Stack<Integer> s = new Stack<Integer>();
-		for (int i = 0; i < args.length; i++) {
-			s.push(Integer.parseInt(args[i]));
-			assert s.size() == i;
-			}
-		System.out.print("Stack: ");
-		for (int n: s) {
-			System.out.print(n + " ");
-			}
-		System.out.println();
-
-		int current = args.length - 1;
-		while (! s.isEmpty()) {
-			int result = s.pop();
-			assert result == Integer.parseInt(args[current--]);
-			System.out.println(result);
-			}
-		}
-
 	}
