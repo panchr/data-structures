@@ -23,13 +23,11 @@ public class Stack<Item> implements Iterable<Item> {
 		if (item == null) throw new NullPointerException("Item cannot be null");
 		this.data[++this.current] = item;
 		if (this.current == this.size - 1) this.resize(this.size * 2);
-		// System.out.println(this.current);
 		}
 
 	public Item pop() {
 		// Pop an item from the stack
 		if (isEmpty()) throw new NoSuchElementException("No more elements exist");
-		// System.out.println(this.current);
 		Item retval = this.data[this.current--];
 		this.data[this.current + 1] = null;
 		if (((double) this.current) / this.size <= 0.25) this.resize(this.size / 2);
