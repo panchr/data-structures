@@ -2,7 +2,7 @@
 // StackTester.java
 
 public class StackTester {
-	private static Stack<Integer> s = new Stack<Integer>();
+	private static LinkedListStack<Integer> s = new LinkedListStack<Integer>();
 
 	public static void main(String[] args) {
 		// Test the Stack implementation
