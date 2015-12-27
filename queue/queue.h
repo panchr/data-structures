@@ -95,9 +95,12 @@ Args
 	int size - new size of queue
 */
 void queue_resize(Queue *q, int size) {
+	// copy data to temporary array of new size
 	int *temp_data = (int *) calloc(size, sizeof(int));
 	for (int i = 0; i < q->filled; i++) temp_data[i] = q->data[i + q->popPointer];
+	// cleanup old array
 	free(q->data);
+	// set new values of queue
 	q->data = temp_data;
 	q->size = size;
 	q->popPointer = 0;
