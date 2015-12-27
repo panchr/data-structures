@@ -13,12 +13,13 @@
 
 #define QUEUE_RATIO(q) ((double) q->size / q->filled)
 
-typedef struct Queue {
-	int *data;
-	int popPointer;
-	int pushPointer;
-	int filled;
-	int size;
+typedef struct Queue_ {
+	// a resizing-array queue
+	int *data; // data in the queue
+	int popPointer; // index to pop from the queue
+	int pushPointer; // index to push in the queue
+	int filled; // amount filled (pushPointer - popPointer)
+	int size; // size of the queue
 	} Queue;
 
 // compile signatures for various methods
@@ -94,12 +95,13 @@ Args
 	int size - new size of queue
 */
 void queue_resize(Queue *q, int size) {
-	int *temp_data = (int *) calloc(q->filled, sizeof(int));
-	int popPointer = q->popPointer;
-	for (int i = 0; i < q->filled; i++) temp_data[i] = q->data[i + popPointer];
+	int *temp_data = (int *) calloc(size, sizeof(int));
+	for (int i = 0; i < q->filled; i++) temp_data[i] = q->data[i + q->popPointer];
 	free(q->data);
-	q->data = (int *) realloc(temp_data, size);
+	q->data = temp_data;
 	q->size = size;
+	q->popPointer = 0;
+	q->pushPointer = q->filled;
 	}
 
 /*

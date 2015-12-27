@@ -10,13 +10,16 @@ int main(int argc, const char* argv[]) {
 
 	Queue *q = queue_init();
 
+	// enqueue argv
 	for (int i = 1; i < argc; i++) {
 		queue_enqueue(q, strtol(argv[i], NULL, 10));
 		}
 
+	printf("Queue: ");
 	while (! queue_empty(q)) {
-	 	printf("%d\n", queue_dequeue(q));
+	 	printf("%d ", queue_dequeue(q));
 	 	}
+	 printf("\n");
 
 	queue_destroy(q);
 
