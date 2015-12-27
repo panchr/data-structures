@@ -8,7 +8,7 @@ public class QueueTester {
 		// Test the Queue implementation
 		for (int i = 0; i < args.length; i++) {
 			q.enqueue(Integer.parseInt(args[i]));
-			assert q.size() == i;
+			assert q.size() == i + 1;
 			}
 		System.out.print("Queue: ");
 		for (int n: q) {
@@ -20,7 +20,6 @@ public class QueueTester {
 		while (! q.isEmpty()) {
 			int result = q.dequeue();
 			assert result == Integer.parseInt(args[current++]);
-			System.out.println(result);
 			}
 		}
 	}
