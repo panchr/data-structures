@@ -29,32 +29,51 @@ int stack_pop(Stack *s);
 int stack_size(Stack *s);
 bool stack_empty(Stack *s);
 
+/*
+Create a new Stack
+*/
 Stack* stack_init(void) {
-	// Create a new Stack and return a pointer to it
 	Stack *s = malloc(sizeof(Stack));
 	s->current = STACK_NULL;
 	return s;
 	}
 
+/*
+Destroy a stack
+
+Args
+	Stack *s - stack to destroy
+*/
 void stack_destroy(Stack *s) {
-	// Destroy a stack
 	if (s) free(s);
 	}
 
+/*
+Push onto a stack
+
+Args
+	Stack *s - stack to push onto
+	int datum - data to push onto stack
+*/
 void stack_push(Stack *s, int datum) {
-	// Push an item onto a stack
 	Node *nextNode = malloc(sizeof(Node));
 	nextNode->data = datum;
-	if (s->current) {
-		// if not the first item, progress the next item in the stack
-		nextNode->next = s->current;
-		}
+	// if not the first item, progress the next item in the stack
+	if (s->current) nextNode->next = s->current;
 	s->current = nextNode;
 	s->size++;
 	}
 
+/*
+Pop from a stack
+
+Args
+	Stack *s - stack to pop from
+
+Returns
+	int - popped item
+*/
 int stack_pop(Stack *s) {
-	// Pop an item from the stack
 	if (stack_empty(s)) return STACK_NULL;
 	int retval = (s->current->data);
 	free(s->current); // prevent memory leaks
@@ -63,13 +82,29 @@ int stack_pop(Stack *s) {
 	return retval;
 	}
 
+/*
+Get the size of the stack
+
+Args
+	Stack *s - stack to get size of
+
+Returns
+	int - size of stack
+*/
 int stack_size(Stack *s) {
-	// Get the size of a stack
 	return s->size;
 	}
 
+/*
+Check whether or not the stack is empty
+
+Args
+	Stack *s - stack to check
+
+Returns
+	bool - whether or not stack is empty
+*/
 bool stack_empty(Stack *s) {
-	// Check if a stack is empty
 	return s->size == 0;
 	}
 

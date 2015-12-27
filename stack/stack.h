@@ -11,9 +11,10 @@
 #define STACK_NULL 0;
 
 typedef struct Stack_ {
-	int *data;
-	int current;
-	int size;
+	// resizing-array Stack
+	int *data; // data stored in stack
+	int current; // current index
+	int size; // size of stack
 	} Stack;
 
 Stack* stack_init(void);
@@ -24,8 +25,10 @@ void stack_resize(Stack *s, int size);
 int stack_size(Stack *s);
 bool stack_empty(Stack *s);
 
+/*
+Create a new Stack
+*/
 Stack* stack_init(void) {
-	// Create a new Stack and return a pointer to it
 	Stack *s = malloc(sizeof(Stack));
 	s->current = 0;
 	s->size = 5;
@@ -33,43 +36,80 @@ Stack* stack_init(void) {
 	return s;
 	}
 
+/*
+Destroy a stack
+
+Args
+	Stack *s - stack to destroy
+*/
 void stack_destroy(Stack *s) {
-	// Destroy a stack
 	if (s) free(s);
 	}
 
+/*
+Push onto a stack
+
+Args
+	Stack *s - stack to push onto
+	int datum - data to push onto stack
+*/
 void stack_push(Stack *s, int datum) {
-	// Push an item onto the stack
 	s->data[s->current++] = datum;
-	if ((s->size / s->current) <= 2) {
-		stack_resize(s, s->size * 2);
-		}
+	if ((s->size / s->current) <= 2) stack_resize(s, s->size * 2);
 	}
 
+/*
+Pop from a stack
+
+Args
+	Stack *s - stack to pop from
+
+Returns
+	int - popped item
+*/
 int stack_pop(Stack *s) {
-	// Pop an item from the stack
 	if (stack_empty(s)) return STACK_NULL;
 	s->current--;
 	int retval = (s->data[s->current]);
-	if ((s->size / s->current) >= 4) {
-		stack_resize(s, s->size / 2);
-		}
+	if ((s->size / s->current) >= 4) stack_resize(s, s->size / 2);
 	return retval;
 	}
 
+/*
+Resize the stack
+
+Args
+	Stack *s - stack to resize
+	int size - new size of stack
+*/
 void stack_resize(Stack *s, int size) {
-	// Resize the stack
 	s->data = (int *) realloc(s->data, size);
 	s->size = size;
 	}
 
+/*
+Get the size of the stack
+
+Args
+	Stack *s - stack to get size of
+
+Returns
+	int - size of stack
+*/
 int stack_size(Stack *s) {
-	// Get the size of a stack
 	return s->size;
 	}
 
+/*
+Check whether or not the stack is empty
+
+Args
+	Stack *s - stack to check
+
+Returns
+	bool - whether or not stack is empty
+*/
 bool stack_empty(Stack *s) {
-	// Check if a stack is empty
 	return s->current == 0;
 	}
 
