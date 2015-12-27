@@ -6,11 +6,12 @@
 #define QUEUE_HEADER
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
 
 #define QUEUE_NULL 0;
+#define INITIAL_SIZE 5;
 
+// macro to easily calculate the filled ratio of the queue
 #define QUEUE_RATIO(q) ((double) q->size / q->filled)
 
 typedef struct Queue_ {
@@ -42,7 +43,7 @@ Queue* queue_init(void) {
 	q->popPointer = 0;
 	q->pushPointer = 0;
 	q->filled = 0;
-	q->size = 5;
+	q->size = INITIAL_SIZE;
 	q->data = (int *) calloc(q->size, sizeof(int));
 	return q;
 	}

@@ -9,6 +9,10 @@
 #include <stdbool.h>
 
 #define STACK_NULL 0;
+#define INITIAL_SIZE 5;
+
+// macro to easily calculate the filled ratio of the stack
+#define STACK_RATIO(s) ((double) s->size / s->current)
 
 typedef struct Stack_ {
 	// resizing-array Stack
@@ -17,6 +21,7 @@ typedef struct Stack_ {
 	int size; // size of stack
 	} Stack;
 
+// compile signatures for various methods
 Stack* stack_init(void);
 void stack_destroy(Stack *s);
 void stack_push(Stack *s, int datum);
@@ -31,7 +36,7 @@ Create a new Stack
 Stack* stack_init(void) {
 	Stack *s = malloc(sizeof(Stack));
 	s->current = 0;
-	s->size = 5;
+	s->size = INITIAL_SIZE;
 	s->data = (int *) calloc(s->size, sizeof(int));
 	return s;
 	}
@@ -55,7 +60,7 @@ Args
 */
 void stack_push(Stack *s, int datum) {
 	s->data[s->current++] = datum;
-	if ((s->size / s->current) <= 2) stack_resize(s, s->size * 2);
+	if (STACK_RATIO(s) <= 2) stack_resize(s, s->size * 2);
 	}
 
 /*
@@ -71,7 +76,7 @@ int stack_pop(Stack *s) {
 	if (stack_empty(s)) return STACK_NULL;
 	s->current--;
 	int retval = (s->data[s->current]);
-	if ((s->size / s->current) >= 4) stack_resize(s, s->size / 2);
+	if (STACK_RATIO(s) >= 4) stack_resize(s, s->size / 2);
 	return retval;
 	}
 
