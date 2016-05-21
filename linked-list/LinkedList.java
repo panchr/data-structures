@@ -4,17 +4,18 @@
 import java.util.Iterator;
 
 /**
-* A LinkedList implements the basic operations of a linked list.
+* A {@link LinkedList} implements the basic operations of a linked list.
 * In essence, this involves adding, removing, and querying for items.
 * @author Rushy Panchal
 * @version 0.1.0
 */
-public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item> {
+public class LinkedList<Item> implements Iterable<Item> {
 	private int size = 0; // size of the linked list
 	private Node current; // current node
 
 	/**
-	* A Node is an element in the linked list. This is created as a record
+	* A {@link Node} is an element in the {@link LinkedList}. This is created
+	* as a record.
 	*/
 	private class Node {
 		private Item data; // data stored in the node
@@ -23,13 +24,13 @@ public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item>
 		}
 
 	/**
-	* Construct a new LinkedList
+	* Construct a new {@link LinkedList}
 	*/
 	public LinkedList() {}
 
 	/**
-	* Add an item to the linked list
-	* @param item item to add to the linked list
+	* Add an item to the {@link LinkedList}
+	* @param item item to add to the {@link LinkedList}
 	* @return index of the inserted item
 	*/
 	public int add(Item item) {
@@ -48,19 +49,24 @@ public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item>
 		}
 
 	/**
-	* Remove an item from the linked list
-	* @param index index to remove from thel inked list
+	* Remove an item from the {@link LinkedList}
+	* @param index index to remove from the {@link LinkedList}
 	* @throws ArrayIndexOutOfBoundsException index is greater than current size
 	*/
 	public void remove(int index) {
-		if (index >= size) throw new ArrayIndexOutOfBoundsException(index);
+		if (index >= this.size) throw new ArrayIndexOutOfBoundsException(index);
+
+		index = adjustedIndex(index);
 		Node node = this.current;
-		for (int i = 0; i < index; i++) node = node.next;
+		for (int i = 0; i < index; i++) node = node.prev;
 
 		/* merge references of prev and next to point to each other, thus deleting
 		the given index */
-		node.prev.next = node.next;
 		if (node.next != null) node.next.prev = node.prev;
+		if (node.prev != null) node.prev.next = node.next;
+		if (node == this.current) this.current = null;
+		
+		this.size--;
 		}
 
 	/**
@@ -71,57 +77,79 @@ public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item>
 	*/
 	public Item get(int index) {
 		if (index >= size) throw new ArrayIndexOutOfBoundsException(index);
+		index = adjustedIndex(index);
+
 		Node node = this.current;
-		for (int i = 0; i < index; i++) node = node.next;
+		for (int i = 0; i < index; i++) {
+			if (node.prev == null) break;
+			node = node.prev;
+			}
 		return node.data;
 		}
 
 	/**
-	* Get the index of an item in the linked list, with -1 representing that
-	* the item does not exist in the linked list.
+	* Get the index of an item in the {@link LinkedList}, with -1 representing that
+	* the item does not exist in the {@link LinkedList}.
 	* @param item item to get the index for
 	* @return index of item, or -1 if it is not found
 	* @throws NullPointerException item is null
 	*/
-	public int get(Item item) throws NullPointerException {
+	public int index(Item item) {
 		if (item == null) throw new NullPointerException("item cannot be null");
 
 		// search through the linked list until the item is found
 		Node node = this.current;
-		for (int index = 0; index < this.size; index++) {
-			if (node.data.equals(item)) return index; // found :)
-			node = node.next;
+		for (int index = 0; index < this.size - 1; index++) {
+			if (node.data.equals(item)) return adjustedIndex(index); // found :)
+			node = node.prev;
 			}
 
 		return -1; // item not found
 		}
 
 	/**
-	* Check if the linked list contains a certain item
+	* Check if the {@link LinkedList} contains a certain item
 	* @param item item to check for
-	* @return whether or not the linked list contains the given item
+	* @return whether or not the {@link LinkedList} contains the given item
 	*/
 	public boolean contains(Item item) {
-		return get(item) != -1;
+		return index(item) != -1;
 		}
 
 	/**
-	* Get the current size of the linked list
-	* @return size of the linked list
+	* Get the current size of the {@link LinkedList}
+	* @return size of the {@link LinkedList}
 	*/
 	public int size() {
 		return this.size;
 		}
 
 	/**
-	* Check if the linked list is empty
-	* @return whether or not the linked list is empty
+	* Check if the {@link LinkedList} is empty
+	* @return whether or not the {@link LinkedList} is empty
 	*/
 	public boolean isEmpty() {
 		return this.size == 0;
 		}
 
+	/**
+	* Get an iterator for the items in the {@link LinkedList}
+	* @return iterator for the {@link LinkedList}
+	*/
 	public Iterator<Item> iterator() {
 		return null;
+		}
+
+	/**
+	* Get the proper index of the given index. When mapping to a {@link LinkedList},
+	* the most recent item is technically the "first" item, or index 0.
+	* As a result, this does not follow an appropriate index mapping based on
+	* the order of insertions. So, this method adjusts that index to match the
+	* proper order in the {@link LinkedList}.
+	* @param index index to adjust
+	* @return adjusted index
+	*/
+	private int adjustedIndex(int index) {
+		return (this.size - index - 1);
 		}
 	}
