@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 #include <assert.h>
 #include "queue.h"
 
@@ -134,18 +135,19 @@ static bool Queue_resize(Queue_T q, size_t new_size) {
 	assert(q != NULL);
 	assert(new_size >= 0);
 
-	current_pop = q->pop - q->data;
-	current_push = q->push - q->data;
-
 	/* Allocate memory for the new array, and ensure it is successful. */
-	new_data = (void**) realloc(q->data, new_size * sizeof(void*));
+	new_data = (void**) malloc(new_size * sizeof(void*));
 	if (new_data == NULL) return false;
 
+	/* Copy the current data, starting from the popped position, to the
+	new array. */
+	memcpy(new_data, q->pop, q->filled * sizeof(void*));
+	
 	/* Set the fields of the queue with the new array. */
 	q->data = new_data;
 	q->size = new_size;
-	q->pop = (q->data + current_pop);
-	q->push = (q->data + current_push);
+	q->pop = new_data;
+	q->push = (new_data + q->filled);
 
 	return true;
 	}

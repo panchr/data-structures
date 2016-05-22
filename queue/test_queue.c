@@ -32,7 +32,12 @@ int main(int argc, const char* argv[]) {
 	printf("Queue: ");
 	while (! Queue_empty(q)) {
 		item = Queue_dequeue(q);
-		assert(item == argv[i++]);
+		if (item != argv[i]) {
+			fprintf(stderr, "Queue item %d should be %p, but is %p.\n",
+				i, argv[i], item);
+			fflush(NULL);
+			}
+		i++;
 
 		printf("%s ", (char*) item);
 		}
