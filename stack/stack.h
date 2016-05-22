@@ -1,121 +1,57 @@
-// Rushy Panchal
-// stack.h
-// A stack implemented with a resizing array
+/*
+* stack.h
+* Author: Rushy Panchal
+* Description: A stack that can store any pointer type. Supports the FIFO order -
+*	first-in-first-out.
+*/
 
 #ifndef STACK_HEADER
 #define STACK_HEADER
 
-#include <stdlib.h>
 #include <stdbool.h>
 
-#define STACK_NULL 0;
-#define INITIAL_SIZE 5;
-
-// macro to easily calculate the filled ratio of the stack
-#define STACK_RATIO(s) ((double) s->size / s->current)
-
-typedef struct Stack_ {
-	// resizing-array Stack
-	int *data; // data stored in stack
-	int current; // current index
-	int size; // size of stack
-	} Stack;
-
-// compile signatures for various methods
-Stack* stack_init(void);
-void stack_destroy(Stack *s);
-void stack_push(Stack *s, int datum);
-int stack_pop(Stack *s);
-void stack_resize(Stack *s, int size);
-int stack_size(Stack *s);
-bool stack_empty(Stack *s);
+typedef struct Stack *Stack_T;
 
 /*
-Create a new Stack
+* Create a new stack.
+* Returns
+* 	(Stack_T) Stack object on creation, or NULL on memory exhaustion.
 */
-Stack* stack_init(void) {
-	Stack *s = malloc(sizeof(Stack));
-	s->current = 0;
-	s->size = INITIAL_SIZE;
-	s->data = (int *) calloc(s->size, sizeof(int));
-	return s;
-	}
+Stack_T Stack_new(void);
 
 /*
-Destroy a stack
-
-Args
-	Stack *s - stack to destroy
+* Free the stack object.
+* Parameters
+*	Stack_T s - stack to free
 */
-void stack_destroy(Stack *s) {
-	if (s) free(s);
-	}
+void Stack_free(Stack_T s);
 
 /*
-Push onto a stack
-
-Args
-	Stack *s - stack to push onto
-	int datum - data to push onto stack
+* Push an item onto the stack.
+* Parameters
+*	Stack_T s - stack to push onto
+*	const void* item - item to add to stack
+* Returns
+*	(bool) true if successfully added to stack and false otherwise
 */
-void stack_push(Stack *s, int datum) {
-	s->data[s->current++] = datum;
-	if (STACK_RATIO(s) <= 2) stack_resize(s, s->size * 2);
-	}
+bool Stack_push(Stack_T s, const void* item);
 
 /*
-Pop from a stack
-
-Args
-	Stack *s - stack to pop from
-
-Returns
-	int - popped item
+* Pop an item from the stack.
+* Parameters
+*	Stack_T s - stack to pop from
+* Returns
+*	(void*) popped item or NULL if no item exists
 */
-int stack_pop(Stack *s) {
-	if (stack_empty(s)) return STACK_NULL;
-	s->current--;
-	int retval = (s->data[s->current]);
-	if (STACK_RATIO(s) >= 4) stack_resize(s, s->size / 2);
-	return retval;
-	}
+void *Stack_pop(Stack_T s);
 
 /*
-Resize the stack
-
-Args
-	Stack *s - stack to resize
-	int size - new size of stack
+* Check if the stack is empty.
+* Parameters
+*	const Stack_T s - stack to test
+* Returns
+*	(bool) whether or not stack is empty
 */
-void stack_resize(Stack *s, int size) {
-	s->data = (int *) realloc(s->data, size);
-	s->size = size;
-	}
-
-/*
-Get the size of the stack
-
-Args
-	Stack *s - stack to get size of
-
-Returns
-	int - size of stack
-*/
-int stack_size(Stack *s) {
-	return s->size;
-	}
-
-/*
-Check whether or not the stack is empty
-
-Args
-	Stack *s - stack to check
-
-Returns
-	bool - whether or not stack is empty
-*/
-bool stack_empty(Stack *s) {
-	return s->current == 0;
-	}
+bool Stack_empty(const Stack_T s);
 
 #endif

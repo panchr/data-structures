@@ -20,7 +20,6 @@ public class StackTester {
 		while (! s.isEmpty()) {
 			int result = s.pop();
 			assert result == Integer.parseInt(args[current--]);
-			System.out.println(result);
 			}
 		}
 	}

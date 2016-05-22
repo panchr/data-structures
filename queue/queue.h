@@ -1,7 +1,8 @@
 /*
 * queue.h
 * Author: Rushy Panchal
-* Description: A queue that can store any pointer type.
+* Description: A queue that can store any pointer type. Supports the LIFO order -
+*	last-in-first-out.
 */
 
 #ifndef QUEUE_HEADER
@@ -40,7 +41,7 @@ bool Queue_enqueue(Queue_T q, const void* item);
 * Parameters
 *	Queue_T q - queue to dequeue from
 * Returns
-*	(void*) dequeued or NULL if no item exists
+*	(void*) dequeued item or NULL if no item exists
 */
 void *Queue_dequeue(Queue_T q);
 

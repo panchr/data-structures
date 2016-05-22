@@ -17,7 +17,7 @@
 /* Macro to calculate the filled ratio of a queue. */
 #define QUEUE_RATIO(q) ((double) q->size / q->filled)
 
-/* A Queue represents a resizing-array implementation of a queue. */
+/* A struct Queue represents a resizing-array implementation of a LIFO queue. */
 struct Queue {
 	void **data; // Data in the queue
 	void **pop; // Pop pointer
@@ -100,7 +100,7 @@ bool Queue_enqueue(Queue_T q, const void* item) {
 * Parameters
 *	Queue_T q - queue to dequeue from
 * Returns
-*	(void*) dequeued or NULL if no item exists
+*	(void*) dequeued item or NULL if no item exists
 */
 void *Queue_dequeue(Queue_T q) {
 	void* item; /* dequeued item */
@@ -127,6 +127,8 @@ void *Queue_dequeue(Queue_T q) {
 *	(bool) whether or not queue is empty
 */
 bool Queue_empty(const Queue_T q) {
+	assert(q != NULL);
+
 	return (q->filled == 0);
 	}
 
@@ -134,11 +136,11 @@ bool Queue_empty(const Queue_T q) {
 /* Resize the queue. */
 static bool Queue_resize(Queue_T q, size_t new_size) {
 	void** new_data; /* New (resized) data array. */
-	size_t current_pop; /* Current pop pointer */
-	size_t current_push; /* Current push pointer */
 
 	assert(q != NULL);
 	assert(new_size >= 0);
+
+	if (new_size < INITIAL_SIZE) return true;
 
 	/* Allocate memory for the new array, and ensure it is successful. */
 	new_data = (void**) malloc(new_size * sizeof(void*));

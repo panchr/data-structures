@@ -3,19 +3,43 @@
 // Test stack implementation
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "stack.h"
 
 int main(int argc, const char* argv[]) {
 	// Unit test the Stack
-	Stack *s = stack_init();
+	int i; /* iterating index */
+	void *item; /* current item */
 
-	// push all argv items onto the stack
-	for (int i = 1; i < argc; i++) stack_push(s, strtol(argv[i], NULL, 10));
+	Stack_T s = Stack_new();
+	if (s == NULL) {
+		fprintf(stderr, "Could not create stack.\n");
+		exit(EXIT_FAILURE);
+		}
 
-	// print out the stack
-	while (! stack_empty(s)) printf("%d\n", stack_pop(s));
+	// Push all argv items onto the stack
+	for (i = 1; i < argc; i++) {
+		if (! Stack_push(s, argv[i])) {
+			fprintf(stderr, "Could not push item: %d.\n", i);
+			exit(EXIT_FAILURE);
+			}
+		}
 
-	stack_destroy(s);
+	i = argc - 1;
+	printf("Stack: ");
+	while (! Stack_empty(s)) {
+		item = Stack_pop(s);
+		if (item != argv[i]) {
+			fprintf(stderr, "Stack item %d should be %p, but is %p.\n",
+				i, argv[i], item);
+			}
+		i--;
+
+		printf("%s ", (char*) item);
+		}
+	printf("\n");
+
+	Stack_free(s);
 
 	return 0;
 	}
