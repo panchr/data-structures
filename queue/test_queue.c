@@ -1,27 +1,43 @@
-// Rushy Panchal
-// test_queue.c
-// Test queue implementation
+/*
+* test_queue.c
+* Author: Rushy Panchal
+* Description: Tests queue implementation.
+*/
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "queue.h"
 
 int main(int argc, const char* argv[]) {
 	// Test the Queue class
+	int i; /* iterating index */
+	void *item; /* current item */
 
-	Queue *q = queue_init();
-
-	// enqueue argv
-	for (int i = 1; i < argc; i++) {
-		queue_enqueue(q, strtol(argv[i], NULL, 10));
+	Queue_T q = Queue_new();
+	if (q == NULL) {
+		fprintf(stderr, "Could not create queue.\n");
+		exit(EXIT_FAILURE);
 		}
 
+	// Enqueue argv
+	for (i = 1; i < argc; i++) {
+		if (! Queue_enqueue(q, argv[i])) {
+			fprintf(stderr, "Could not enqueue item: %d.\n", i);
+			exit(EXIT_FAILURE);
+			}
+		}
+
+	i = 1;
 	printf("Queue: ");
-	while (! queue_empty(q)) {
-	 	printf("%d ", queue_dequeue(q));
-	 	}
-	 printf("\n");
+	while (! Queue_empty(q)) {
+		item = Queue_dequeue(q);
+		assert(item == argv[i++]);
 
-	queue_destroy(q);
+		printf("%s ", (char*) item);
+		}
+	printf("\n");
 
+	Queue_free(q);
 	return 0;
 	}
