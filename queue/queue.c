@@ -89,6 +89,9 @@ bool Queue_enqueue(Queue_T q, const void* item) {
 	/* Resize the queue if it is full. */
 	if (QUEUE_RATIO(q) == 1) return Queue_resize(q, q->size * 2);
 
+	/* Wrap the push pointer around. */
+	if ((q->push - q->data) == q->size) q->push = q->data;
+
 	return true;
 	}
 
@@ -110,6 +113,8 @@ void *Queue_dequeue(Queue_T q) {
 	q->filled--;
 
 	if (QUEUE_RATIO(q) >= 4) Queue_resize(q, q->size / 2);
+	/* Wrap the pop pointer around. */
+	else if ((q->pop - q->data) == q->size) q->pop = q->data;
 
 	return item;
 	}
